@@ -1,0 +1,11 @@
+type Query {
+
+    dates_and_price_check(
+        listing_ids: [Int!]!
+    ): [DatesCheck!]
+
+}
+
+type DatesCheck {
+    listing_id: Int!
+}
