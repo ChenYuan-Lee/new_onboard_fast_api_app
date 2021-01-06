@@ -1,4 +1,4 @@
-# new_onboard_fast_api_app
+# New Onboarding FastAPI App
 A toy app built using FastAPI to facilitate understanding of GraphQL, Pydantic, and other concepts such as OCP.
 
 
