@@ -1,7 +1,23 @@
-from pydantic import BaseModel, conlist, conint, Field
+from datetime import datetime
+
+from pydantic import BaseModel, validator
 
 
 class DatesAndPriceCheckInputValidator(BaseModel):
-    listing_ids: conlist(conint(gt=0), min_items=1) = Field(
-        title="Listing ids to check on"
-    )
+    listing_ids: list
+    desired_checkin: str
+
+    @validator('listing_ids')
+    def listing_must_greater_than_zero(cls, v):
+        if len(v) < 0:
+            raise ValueError("Too few listings to check on")
+        return v
+
+    @validator('desired_checkin')
+    def date_must_be_greater_than_today(cls, d):
+        date_time_obj = datetime.strptime(d, '%Y-%m-%d')
+        if date_time_obj < datetime.now():
+            raise ValueError('Date must be after today' + d + " " + str(datetime.today()))
+        return d
+
+

@@ -1,9 +1,10 @@
+from datetime import datetime
 from typing import List
 
 from ariadne import QueryType
 
 from graphql_objects import DatesCheck
-from mock_data import data
+from mock_data import data, House
 from validators import DatesAndPriceCheckInputValidator
 
 query = QueryType()
@@ -21,9 +22,17 @@ class QueryResolvers:
         validated_search_criteria = DatesAndPriceCheckInputValidator(**search_criteria)
         results_list = []
         for listing_id in validated_search_criteria.listing_ids:
-            listing = data[listing_id]
+            listing: House = data[listing_id]
+            dates = listing.available_ranges
+            available_date = datetime.today()
+            for date in dates:
+                date_time_obj = datetime.strptime(validated_search_criteria.desired_checkin, '%Y-%m-%d')
+                if date.range_start > date_time_obj.date():
+                    available_date = date.range_start
+                    break
             dates_check = DatesCheck(
-                listing_id=listing.listing_id
+                listing_id=listing.listing_id,
+                next_available_checkin_date=available_date
             )
             results_list.append(dates_check)
         return results_list

@@ -2,10 +2,12 @@ type Query {
 
     dates_and_price_check(
         listing_ids: [Int!]!
+        desired_checkin: String!
     ): [DatesCheck!]
 
 }
 
 type DatesCheck {
     listing_id: Int!
+    next_available_checkin_date: String!
 }
