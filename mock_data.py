@@ -13,6 +13,7 @@ class AvailableRange:
 class House:
     listing_id: int
     available_ranges: List[AvailableRange]
+    min_stay_nights:int
 
 
 data = {
@@ -27,6 +28,7 @@ data = {
                 range_start=date(2021, 12, 31),
                 range_end=date(2022, 2, 5)
             ),
-        ]
+        ],
+        min_stay_nights=3
     )
 }

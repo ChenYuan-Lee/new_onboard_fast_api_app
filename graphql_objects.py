@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Optional
 
 
 class DatesCheck:
@@ -6,7 +7,11 @@ class DatesCheck:
     def __init__(
             self,
             listing_id: int,
-            next_available_checkin_date: date
+            is_available: bool,
+            checkin_date: Optional[date] = None,
+            checkout_date: Optional[date]= None,
     ):
         self.listing_id = listing_id
-        self.next_available_checkin_date = next_available_checkin_date
+        self.is_available = is_available
+        self.checkin_date = checkin_date
+        self.checkout_date = checkout_date
