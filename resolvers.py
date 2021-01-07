@@ -24,10 +24,9 @@ class QueryResolvers:
         for listing_id in validated_search_criteria.listing_ids:
             listing: House = data[listing_id]
             dates = listing.available_ranges
-            available_date = datetime.today()
+            available_date = datetime.today().date()
             for date in dates:
-                date_time_obj = datetime.strptime(validated_search_criteria.desired_checkin, '%Y-%m-%d')
-                if date.range_start > date_time_obj.date():
+                if date.range_start > validated_search_criteria.desired_checkin:
                     available_date = date.range_start
                     break
             dates_check = DatesCheck(
