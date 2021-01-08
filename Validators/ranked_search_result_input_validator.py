@@ -1,4 +1,4 @@
-from Validators.CheckinCheckoutValidator import CheckinCheckoutValidator
+from Validators.checkin_checkout_validator import CheckinCheckoutValidator
 
 
 class RankedSearchResultInputValidator(CheckinCheckoutValidator):

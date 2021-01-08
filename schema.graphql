@@ -15,7 +15,7 @@ type Query {
 
 type DatesCheck {
     listing_id: Int!
-    is_available:Boolean
+    is_available:Boolean!
     checkin_date:String
     checkout_date:String
 }

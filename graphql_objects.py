@@ -9,7 +9,7 @@ class DatesCheck:
             listing_id: int,
             is_available: bool,
             checkin_date: Optional[date] = None,
-            checkout_date: Optional[date]= None,
+            checkout_date: Optional[date] = None,
     ):
         self.listing_id = listing_id
         self.is_available = is_available

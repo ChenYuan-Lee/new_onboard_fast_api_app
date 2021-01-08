@@ -29,6 +29,6 @@ class CheckinCheckoutValidator(BaseModel):
 
     @validator('desired_checkout')
     def checkin_date_before_checkout_date(cls, checkout_date: Optional[date], values, **kwargs) -> Optional[date]:
-        if 'desired_checkin' in values and checkout_date < values['desired_checkin']:
+        if 'desired_checkin' in values and checkout_date <= values['desired_checkin']:
             raise ValueError("Checkout date before Checkin Date")
         return checkout_date
