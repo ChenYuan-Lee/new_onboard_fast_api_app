@@ -23,7 +23,7 @@ class CheckinCheckoutValidator(BaseModel):
 
     @validator('desired_checkout')
     def checkout_date_present(cls, checkout_date: Optional[date], values) -> Optional[date]:
-        if 'desired_checkin' in values and checkout_date is not None and values['desired_checkin'] is None:
+        if checkout_date is not None and values.get('desired_checkin') is None:
             raise ValueError("Checkout date exists without checkin Date")
         return checkout_date
 
