@@ -34,4 +34,5 @@ class QueryResolvers:
             **search_criteria
     ) -> List[DatesCheck]:
         validated_search_criteria = RankedSearchResultInputValidator(**search_criteria)
+        print(type(validated_search_criteria))
         return GetResultsFromSearchCriteriaAndData.get_data_check_results(validated_search_criteria, data)
