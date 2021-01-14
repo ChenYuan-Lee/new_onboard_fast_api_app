@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from Models.AvailableRangeModel import AvailableRange
+from models.available_range_model import AvailableRange
 
 
 @dataclass

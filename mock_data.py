@@ -1,7 +1,7 @@
 from datetime import date
 
-from Models.AvailableRangeModel import AvailableRange
-from Models.HouseModel import House
+from models.available_range_model import AvailableRange
+from models.house_model import House
 
 data = {
     1: House(

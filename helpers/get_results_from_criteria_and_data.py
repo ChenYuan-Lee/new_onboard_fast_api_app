@@ -1,44 +1,37 @@
 from datetime import date, timedelta
 from typing import List, Dict
 
-from Validators.checkin_checkout_validator import CheckinCheckoutValidator
+from validators.checkin_checkout_validator import CheckinCheckoutValidator
 from graphql_objects import DatesCheck
 from mock_data import House
 
 
-class GetResultsFromSearchCriteriaAndData:
+class DatesCheckGetter:
 
     @staticmethod
-    def get_data_check_results(
+    def get_date_check_results(
             validated_search_criteria: CheckinCheckoutValidator,
             id_to_houses_dict: Dict[id, House]
     ) -> List[DatesCheck]:
         """
-        Parent function to get the Date Availability when under different conditions - when Checkin and Checkout are
+        Parent function to get the Date Availability under different conditions - when Checkin and Checkout are
         provided or skipped
-        @param validated_search_criteria: Parsed validator to run the logic on
-        @type validated_search_criteria: CheckinCheckoutValidator
-        @param id_to_houses_dict: Listing IDs to Houses Dictionary
-        @type id_to_houses_dict: Dict{id, House}
-        @return: Returns the list of DatesCheck objects which show whether a house is available or not given the search
-        criteria
-        @rtype: List[DatesCheck]
         """
         results_list: List[DatesCheck] = []
         desired_checkin = validated_search_criteria.desired_checkin
         desired_checkout = validated_search_criteria.desired_checkout
         for house in id_to_houses_dict.values():
             if desired_checkin is None and desired_checkout is None:
-                data_check = GetResultsFromSearchCriteriaAndData.update_data_check_when_null_checkin_checkout(
+                data_check = DatesCheckGetter.update_date_check_when_null_checkin_checkout(
                     house=house
                 )
             elif desired_checkout is None:
-                data_check = GetResultsFromSearchCriteriaAndData.update_data_check_when_only_checkin_provided(
+                data_check = DatesCheckGetter.update_date_check_when_only_checkin_provided(
                     desired_checkin=desired_checkin,
                     house=house,
                 )
             else:
-                data_check = GetResultsFromSearchCriteriaAndData.update_data_check_when_both_checkin_checkout_provided(
+                data_check = DatesCheckGetter.update_date_check_when_both_checkin_checkout_provided(
                     desired_checkin=desired_checkin,
                     desired_checkout=desired_checkout,
                     house=house,
@@ -48,7 +41,7 @@ class GetResultsFromSearchCriteriaAndData:
         return results_list
 
     @staticmethod
-    def update_data_check_when_both_checkin_checkout_provided(
+    def update_date_check_when_both_checkin_checkout_provided(
             desired_checkin: date,
             desired_checkout: date,
             house: House
@@ -74,7 +67,7 @@ class GetResultsFromSearchCriteriaAndData:
         )
 
     @staticmethod
-    def update_data_check_when_only_checkin_provided(
+    def update_date_check_when_only_checkin_provided(
             desired_checkin: date,
             house: House
     ) -> DatesCheck:
@@ -109,12 +102,13 @@ class GetResultsFromSearchCriteriaAndData:
         )
 
     @staticmethod
-    def update_data_check_when_null_checkin_checkout(
+    def update_date_check_when_null_checkin_checkout(
             house: House
     ) -> DatesCheck:
         """
         Update and create the DatesCheck object when neighter checkin nor checkout is provided
-        #Assumption : There is a always a house in the data with available dates
+        #Assumption : There is a always a house in the data with available dates and the available dates don't have
+        expired ranges.
         """
         if date.today() > house.available_ranges[0].range_start:
             checkin_date = date.today()

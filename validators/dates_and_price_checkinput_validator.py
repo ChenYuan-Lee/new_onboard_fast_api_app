@@ -1,6 +1,6 @@
 from pydantic.types import conint, conlist
 
-from Validators.checkin_checkout_validator import CheckinCheckoutValidator
+from validators.checkin_checkout_validator import CheckinCheckoutValidator
 
 
 class DatesAndPriceCheckInputValidator(CheckinCheckoutValidator):
