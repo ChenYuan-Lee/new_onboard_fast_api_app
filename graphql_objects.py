@@ -14,3 +14,12 @@ class DatesCheck:
         self.is_available = is_available
         self.checkin_date = checkin_date
         self.checkout_date = checkout_date
+
+
+class Error:
+    def __init__(
+            self,
+            error: str,
+    ):
+        self.error = error
+

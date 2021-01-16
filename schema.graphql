@@ -3,19 +3,25 @@ type Query {
     ranked_search_results(
         desired_checkin: String
         desired_checkout: String
-    ): [DatesCheck!]
+    ): [DatesResult!]
 
     dates_and_price_check(
         listing_ids: [Int!]!
         desired_checkin: String
         desired_checkout: String
-    ): [DatesCheck!]
+    ): [DatesResult!]
 
 }
+
+union DatesResult = DatesCheck | Error
 
 type DatesCheck {
     listing_id: Int!
     is_available: Boolean!
     checkin_date: String!
     checkout_date: String!
+}
+
+type Error {
+    error: String!
 }
