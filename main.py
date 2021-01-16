@@ -12,13 +12,10 @@ dates_result = UnionType("DatesResult")
 
 @dates_result.type_resolver
 def resolve_ranked_search_type(obj, *_):
-    print("this is here")
     if isinstance(obj, DatesCheck):
         return "DatesCheck"
-    print("this is here2")
     if isinstance(obj, Error):
         return "Error"
-    print("This is running")
     return None
 
 
