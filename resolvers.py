@@ -22,20 +22,22 @@ class QueryResolvers:
     ) -> List[Union[DatesCheck, Error]]:
         try:
             validated_search_criteria = DatesAndPriceCheckInputValidator(**search_criteria)
-            id_houses_dict = {}
-            unsupported_listing = []
+            dates_and_price_check_results = []
             for listing_id in validated_search_criteria.listing_ids:
                 if listing_id in data.keys():
-                    id_houses_dict[listing_id] = data[listing_id]
-                else:
-                    unsupported_listing.append(
-                        ListingUnsupportedError(f"Listing {listing_id} out of scope")
+                    dates_and_price_check_results.append(
+                        DatesCheckGetter.get_date_check_result_for_house(
+                            validated_search_criteria,
+                            data[listing_id]
+                        )
                     )
+                else:
+                    dates_and_price_check_results.append(ListingUnsupportedError(f"Listing {listing_id} out of scope"))
 
-            return DatesCheckGetter.get_date_check_results(validated_search_criteria, id_houses_dict) + \
-                   unsupported_listing
-        except:
-            return [GenericError(f"Something seems to have gone wrong. Please check the input field values")]
+            return dates_and_price_check_results
+
+        except Exception as e:
+            return [GenericError(f"Something seems to have gone wrong. Please check the error message {e}")]
 
     @staticmethod
     @query.field("ranked_search_results")
@@ -47,5 +49,5 @@ class QueryResolvers:
         try:
             validated_search_criteria = RankedSearchResultInputValidator(**search_criteria)
             return DatesCheckGetter.get_date_check_results(validated_search_criteria, data)
-        except:
-            return [GenericError(f"Something seems to have gone wrong. Please check the input field values")]
+        except Exception as e:
+            return [GenericError(f"Something seems to have gone wrong. Please check the error message {e}")]
