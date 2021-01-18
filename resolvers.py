@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Union
 
-from ariadne import QueryType
+from ariadne import QueryType, UnionType
 
 from validators.ranked_search_result_input_validator import RankedSearchResultInputValidator
 from validators.dates_and_price_checkinput_validator import DatesAndPriceCheckInputValidator
 from helpers.get_results_from_criteria_and_data import DatesCheckGetter
-from graphql_objects import DatesCheck
+from graphql_objects import DatesCheck, Error, ListingUnsupportedError, GenericError, DateResults
 from mock_data import data
 
 query = QueryType()
@@ -19,12 +19,25 @@ class QueryResolvers:
             _,
             info,
             **search_criteria
-    ) -> List[DatesCheck]:
-        validated_search_criteria = DatesAndPriceCheckInputValidator(**search_criteria)
-        id_houses_dict = {}
-        for listing_id in validated_search_criteria.listing_ids:
-            id_houses_dict[listing_id] = data[listing_id]
-        return DatesCheckGetter.get_date_check_results(validated_search_criteria, id_houses_dict)
+    ) -> List[DateResults]:
+        try:
+            validated_search_criteria = DatesAndPriceCheckInputValidator(**search_criteria)
+            dates_and_price_check_results = []
+            for listing_id in validated_search_criteria.listing_ids:
+                if listing_id in data.keys():
+                    dates_and_price_check_results.append(
+                        DatesCheckGetter.get_dates_check_result_for_house(
+                            validated_search_criteria,
+                            data[listing_id]
+                        )
+                    )
+                else:
+                    dates_and_price_check_results.append(ListingUnsupportedError(f"Listing {listing_id} out of scope"))
+
+            return dates_and_price_check_results
+
+        except Exception as e:
+            return [GenericError(f"Something seems to have gone wrong. Please check the error message {e}")]
 
     @staticmethod
     @query.field("ranked_search_results")
@@ -32,7 +45,9 @@ class QueryResolvers:
             _,
             info,
             **search_criteria
-    ) -> List[DatesCheck]:
-        validated_search_criteria = RankedSearchResultInputValidator(**search_criteria)
-        print(type(validated_search_criteria))
-        return DatesCheckGetter.get_date_check_results(validated_search_criteria, data)
+    ) -> List[DateResults]:
+        try:
+            validated_search_criteria = RankedSearchResultInputValidator(**search_criteria)
+            return DatesCheckGetter.get_date_check_results(validated_search_criteria, data)
+        except Exception as e:
+            return [GenericError(f"Something seems to have gone wrong. Please check the error message {e}")]

@@ -26,7 +26,7 @@ data = {
                 range_end=date(2021, 7, 5)
             ),
             AvailableRange(
-                range_start=date(2021, 11, 31),
+                range_start=date(2021, 11, 30),
                 range_end=date(2022, 1, 5)
             ),
         ],

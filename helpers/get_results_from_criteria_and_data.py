@@ -18,27 +18,34 @@ class DatesCheckGetter:
         provided or skipped
         """
         results_list: List[DatesCheck] = []
+        for house in id_to_houses_dict.values():
+            date_check = DatesCheckGetter.get_dates_check_result_for_house(validated_search_criteria, house)
+            results_list.append(date_check)
+        return results_list
+
+    @staticmethod
+    def get_dates_check_result_for_house(
+            validated_search_criteria: CheckinCheckoutValidator,
+            house: House
+    ) -> DatesCheck:
         desired_checkin = validated_search_criteria.desired_checkin
         desired_checkout = validated_search_criteria.desired_checkout
-        for house in id_to_houses_dict.values():
-            if desired_checkin is None and desired_checkout is None:
-                data_check = DatesCheckGetter.update_date_check_when_null_checkin_checkout(
-                    house=house
-                )
-            elif desired_checkout is None:
-                data_check = DatesCheckGetter.update_date_check_when_only_checkin_provided(
-                    desired_checkin=desired_checkin,
-                    house=house,
-                )
-            else:
-                data_check = DatesCheckGetter.update_date_check_when_both_checkin_checkout_provided(
-                    desired_checkin=desired_checkin,
-                    desired_checkout=desired_checkout,
-                    house=house,
-                )
-            results_list.append(data_check)
-
-        return results_list
+        if desired_checkin is None and desired_checkout is None:
+            date_check = DatesCheckGetter.update_date_check_when_null_checkin_checkout(
+                house=house
+            )
+        elif desired_checkout is None:
+            date_check = DatesCheckGetter.update_date_check_when_only_checkin_provided(
+                desired_checkin=desired_checkin,
+                house=house,
+            )
+        else:
+            date_check = DatesCheckGetter.update_date_check_when_both_checkin_checkout_provided(
+                desired_checkin=desired_checkin,
+                desired_checkout=desired_checkout,
+                house=house,
+            )
+        return date_check
 
     @staticmethod
     def update_date_check_when_both_checkin_checkout_provided(
