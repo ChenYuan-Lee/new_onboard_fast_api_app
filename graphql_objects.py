@@ -1,6 +1,6 @@
 from datetime import date
 
-from typing import List
+from typing import Union
 
 
 class DatesCheck:
@@ -42,3 +42,6 @@ class GenericError(Error):
     ):
         super().__init__(error)
         self.error = error
+
+
+DateResults = Union[DatesCheck, ListingUnsupportedError, GenericError]

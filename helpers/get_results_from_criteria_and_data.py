@@ -19,12 +19,12 @@ class DatesCheckGetter:
         """
         results_list: List[DatesCheck] = []
         for house in id_to_houses_dict.values():
-            date_check = DatesCheckGetter.get_date_check_result_for_house(validated_search_criteria, house)
+            date_check = DatesCheckGetter.get_dates_check_result_for_house(validated_search_criteria, house)
             results_list.append(date_check)
         return results_list
 
     @staticmethod
-    def get_date_check_result_for_house(
+    def get_dates_check_result_for_house(
             validated_search_criteria: CheckinCheckoutValidator,
             house: House
     ) -> DatesCheck:
