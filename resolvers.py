@@ -5,7 +5,7 @@ from ariadne import QueryType, UnionType
 from validators.ranked_search_result_input_validator import RankedSearchResultInputValidator
 from validators.dates_and_price_checkinput_validator import DatesAndPriceCheckInputValidator
 from helpers.get_results_from_criteria_and_data import DatesCheckGetter
-from graphql_objects import DatesCheck, Error
+from graphql_objects import DatesCheck, Error, ListingUnsupportedError, GenericError
 from mock_data import data
 
 query = QueryType()
@@ -23,11 +23,20 @@ class QueryResolvers:
         try:
             validated_search_criteria = DatesAndPriceCheckInputValidator(**search_criteria)
             id_houses_dict = {}
+            unsupported_listing = []
             for listing_id in validated_search_criteria.listing_ids:
-                id_houses_dict[listing_id] = data[listing_id]
+                if listing_id in data.keys():
+                    id_houses_dict[listing_id] = data[listing_id]
+                else:
+                    unsupported_listing.append(listing_id)
+            if len(unsupported_listing) != 0:
+                return [ListingUnsupportedError("Few listings are not out of scope. Please check the listings provided",
+                                                unsupported_listing
+                                                )
+                        ]
             return DatesCheckGetter.get_date_check_results(validated_search_criteria, id_houses_dict)
         except:
-            return [Error(f"There is an error. Please check the fields attached")]
+            return [GenericError(f"Something seems to have gone wrong. Please check the input field values")]
 
     @staticmethod
     @query.field("ranked_search_results")
@@ -40,4 +49,4 @@ class QueryResolvers:
             validated_search_criteria = RankedSearchResultInputValidator(**search_criteria)
             return DatesCheckGetter.get_date_check_results(validated_search_criteria, data)
         except:
-            return [Error(f"Ranked search results returned an error. Please check the fields attached")]
+            return [GenericError(f"Something seems to have gone wrong. Please check the input field values")]

@@ -1,5 +1,7 @@
 from datetime import date
 
+from typing import List
+
 
 class DatesCheck:
 
@@ -23,3 +25,22 @@ class Error:
     ):
         self.error = error
 
+
+class ListingUnsupportedError(Error):
+    def __init__(
+            self,
+            error: str,
+            listing: List[int]
+    ):
+        super().__init__(error)
+        self.error = error
+        self.listing = listing
+
+
+class GenericError(Error):
+    def __init__(
+            self,
+            error: str
+    ):
+        super().__init__(error)
+        self.error = error

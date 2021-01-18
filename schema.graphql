@@ -13,7 +13,7 @@ type Query {
 
 }
 
-union DatesResult = DatesCheck | Error
+union DatesResult = DatesCheck | ListingUnsupportedError | GenericError
 
 type DatesCheck {
     listing_id: Int!
@@ -22,6 +22,15 @@ type DatesCheck {
     checkout_date: String!
 }
 
-type Error {
+type ListingUnsupportedError implements Error {
+    error: String!
+    listing: [Int!]
+}
+
+type GenericError implements Error {
+    error: String!
+}
+
+interface Error {
     error: String!
 }

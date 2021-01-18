@@ -4,7 +4,7 @@ from ariadne.asgi import GraphQL
 from ariadne import make_executable_schema, load_schema_from_path, format_error, UnionType
 from graphql import GraphQLError
 
-from graphql_objects import DatesCheck, Error
+from graphql_objects import DatesCheck, GenericError, ListingUnsupportedError
 from resolvers import query
 
 dates_result = UnionType("DatesResult")
@@ -14,13 +14,15 @@ dates_result = UnionType("DatesResult")
 def resolve_ranked_search_type(obj, *_):
     if isinstance(obj, DatesCheck):
         return "DatesCheck"
-    if isinstance(obj, Error):
-        return "Error"
+    if isinstance(obj, GenericError):
+        return "GenericError"
+    if isinstance(obj, ListingUnsupportedError):
+        return "ListingUnsupportedError"
     return None
 
 
 schema_definition = load_schema_from_path("schema.graphql")
-executable_schema = make_executable_schema(schema_definition, [query, dates_result])
+executable_schema = make_executable_schema(schema_definition, query, dates_result)
 
 
 def custom_error_formatter(error: GraphQLError, debug: bool) -> dict:
