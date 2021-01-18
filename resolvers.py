@@ -2,9 +2,11 @@ from typing import List
 
 from ariadne import QueryType
 
+from validators.ranked_search_result_input_validator import RankedSearchResultInputValidator
+from validators.dates_and_price_checkinput_validator import DatesAndPriceCheckInputValidator
+from helpers.get_results_from_criteria_and_data import DatesCheckGetter
 from graphql_objects import DatesCheck
 from mock_data import data
-from validators import DatesAndPriceCheckInputValidator
 
 query = QueryType()
 
@@ -19,11 +21,18 @@ class QueryResolvers:
             **search_criteria
     ) -> List[DatesCheck]:
         validated_search_criteria = DatesAndPriceCheckInputValidator(**search_criteria)
-        results_list = []
+        id_houses_dict = {}
         for listing_id in validated_search_criteria.listing_ids:
-            listing = data[listing_id]
-            dates_check = DatesCheck(
-                listing_id=listing.listing_id
-            )
-            results_list.append(dates_check)
-        return results_list
+            id_houses_dict[listing_id] = data[listing_id]
+        return DatesCheckGetter.get_date_check_results(validated_search_criteria, id_houses_dict)
+
+    @staticmethod
+    @query.field("ranked_search_results")
+    def get_ranked_search_results(
+            _,
+            info,
+            **search_criteria
+    ) -> List[DatesCheck]:
+        validated_search_criteria = RankedSearchResultInputValidator(**search_criteria)
+        print(type(validated_search_criteria))
+        return DatesCheckGetter.get_date_check_results(validated_search_criteria, data)

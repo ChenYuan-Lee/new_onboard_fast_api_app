@@ -1,19 +1,7 @@
-from dataclasses import dataclass
 from datetime import date
-from typing import List
 
-
-@dataclass
-class AvailableRange:
-    range_start: date
-    range_end: date
-
-
-@dataclass
-class House:
-    listing_id: int
-    available_ranges: List[AvailableRange]
-
+from models.available_range_model import AvailableRange
+from models.house_model import House
 
 data = {
     1: House(
@@ -21,12 +9,13 @@ data = {
         available_ranges=[
             AvailableRange(
                 range_start=date(2021, 8, 1),
-                range_end=date(2021, 12, 5)
+                range_end=date(2021, 8, 5)
             ),
             AvailableRange(
                 range_start=date(2021, 12, 31),
                 range_end=date(2022, 2, 5)
             ),
-        ]
+        ],
+        min_stay_nights=3
     )
 }
