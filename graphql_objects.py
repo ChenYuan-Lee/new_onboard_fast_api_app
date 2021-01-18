@@ -30,11 +30,9 @@ class ListingUnsupportedError(Error):
     def __init__(
             self,
             error: str,
-            listing: List[int]
     ):
         super().__init__(error)
         self.error = error
-        self.listing = listing
 
 
 class GenericError(Error):

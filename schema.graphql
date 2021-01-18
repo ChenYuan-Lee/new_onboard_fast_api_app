@@ -24,7 +24,6 @@ type DatesCheck {
 
 type ListingUnsupportedError implements Error {
     error: String!
-    listing: [Int!]
 }
 
 type GenericError implements Error {

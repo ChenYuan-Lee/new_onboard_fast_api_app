@@ -28,13 +28,12 @@ class QueryResolvers:
                 if listing_id in data.keys():
                     id_houses_dict[listing_id] = data[listing_id]
                 else:
-                    unsupported_listing.append(listing_id)
-            if len(unsupported_listing) != 0:
-                return [ListingUnsupportedError("Few listings are not out of scope. Please check the listings provided",
-                                                unsupported_listing
-                                                )
-                        ]
-            return DatesCheckGetter.get_date_check_results(validated_search_criteria, id_houses_dict)
+                    unsupported_listing.append(
+                        ListingUnsupportedError(f"Listing {listing_id} out of scope")
+                    )
+
+            return DatesCheckGetter.get_date_check_results(validated_search_criteria, id_houses_dict) + \
+                   unsupported_listing
         except:
             return [GenericError(f"Something seems to have gone wrong. Please check the input field values")]
 
