@@ -1,11 +1,18 @@
 type Query {
 
-    dates_and_price_check(
+    listings_check(
         listing_ids: [Int!]!
-    ): [DatesCheck!]
+    ): [ListingsCheck!]
 
 }
 
-type DatesCheck {
+type ListingsCheck {
     listing_id: Int!
+    bedrooms: Int!
+    bathrooms: Float!
+    price_breakdown: PriceBreakdown!
+}
+
+type PriceBreakdown {
+    dollars: Float!
 }

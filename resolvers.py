@@ -2,9 +2,11 @@ from typing import List
 
 from ariadne import QueryType
 
-from graphql_objects import DatesCheck
-from mock_data import data
-from validators import DatesAndPriceCheckInputValidator
+from constants import LISTINGS_LOADER_NAME, PRICE_BREAKDOWNS_LOADER_NAME
+from graphql_objects import ListingsCheck
+from handler import Handler
+from loader import ListingsLoader, PriceBreakdownsLoader
+from validators import ListingsCheckInputValidator
 
 query = QueryType()
 
@@ -12,18 +14,16 @@ query = QueryType()
 class QueryResolvers:
 
     @staticmethod
-    @query.field("dates_and_price_check")
-    def get_dates_and_price_check(
+    @query.field("listings_check")
+    async def get_listings_check(
             _,
             info,
             **search_criteria
-    ) -> List[DatesCheck]:
-        validated_search_criteria = DatesAndPriceCheckInputValidator(**search_criteria)
-        results_list = []
-        for listing_id in validated_search_criteria.listing_ids:
-            listing = data[listing_id]
-            dates_check = DatesCheck(
-                listing_id=listing.listing_id
-            )
-            results_list.append(dates_check)
-        return results_list
+    ) -> List[ListingsCheck]:
+        validated_search_criteria = ListingsCheckInputValidator(**search_criteria)
+        info.context[LISTINGS_LOADER_NAME] = ListingsLoader()
+        info.context[PRICE_BREAKDOWNS_LOADER_NAME] = PriceBreakdownsLoader()
+        return await Handler.serve(
+            info=info,
+            search_criteria=validated_search_criteria
+        )
