@@ -11,4 +11,6 @@ class Listing:
     bathrooms: float
 
     async def get_price_breakdown(self, info: Any):
-        return await info.context[PRICE_BREAKDOWNS_LOADER_NAME].load(self.listing_id)
+        price_breakdown_loader = info.context[PRICE_BREAKDOWNS_LOADER_NAME]
+        print(type(price_breakdown_loader))
+        return await price_breakdown_loader.load(self.listing_id)

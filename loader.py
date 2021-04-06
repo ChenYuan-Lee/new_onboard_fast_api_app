@@ -25,3 +25,11 @@ class PriceBreakdownsLoader(DataLoader):
     async def batch_load_fn(listing_ids: List[int]) -> List[PriceBreakdown]:
         list_of_prices = PricesDataDB.get_prices_data_from_db(listing_ids)
         return [PriceBreakdown(dollars=price) for price in list_of_prices]
+
+
+class ListingsLoader2(ListingsLoader):
+    pass
+
+
+class PriceBreakdownsLoader2(PriceBreakdownsLoader):
+    pass
