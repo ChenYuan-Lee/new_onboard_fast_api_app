@@ -2,8 +2,14 @@ type Query {
 
     listings_check(
         listing_ids: [Int!]!
+        extension_type: ExtensionType
     ): [ListingsCheck!]
 
+}
+
+enum ExtensionType {
+    REGULAR
+    SELF_SERVE
 }
 
 type ListingsCheck {
