@@ -5,7 +5,7 @@ from ariadne import QueryType
 from constants import LISTINGS_LOADER_NAME, PRICE_BREAKDOWNS_LOADER_NAME
 from graphql_objects import ListingsCheck
 from handler import Handler
-from loader import ListingsLoader, PriceBreakdownsLoader
+from loaders import ListingsLoader, PriceBreakdownsLoader
 from validators import ListingsCheckInputValidator
 
 query = QueryType()
